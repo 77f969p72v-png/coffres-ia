@@ -1,0 +1,20 @@
+name: Test capture
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Nom de la chaîne Twitch
+        required: true
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip install streamlink
+      - name: Capturer 20 images
+        run: |
+          mkdir frames
+          timeout 90 streamlink --stdout "twitch.tv/${{ github.event.inputs.channel }}" best | ffmpeg -i pipe:0 -vf fps=1/3 -frames:v 20 frames/f%02d.jpg || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames
+          path: frames
