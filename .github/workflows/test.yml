@@ -9,7 +9,10 @@ jobs:
   capture:
     runs-on: ubuntu-latest
     steps:
-      - run: pip install streamlink
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install streamlink
       - name: Capturer 20 images
         run: |
           mkdir frames
